@@ -47,7 +47,7 @@ def _cosine_similarity(a: list[float], b: list[float]) -> float:
 
 def main() -> int:
     script_dir = Path(__file__).resolve().parent
-    default_embeddings = script_dir.parent.parent / "question-embeddings.json"
+    default_embeddings = script_dir / "question-embeddings.json"
 
     parser = argparse.ArgumentParser(
         description="Find closest FAQ questions by embedding similarity"

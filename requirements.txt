@@ -4,3 +4,5 @@ playwright
 ollama
 cdx-toolkit
 anthropic
+onnxruntime
+transformers
