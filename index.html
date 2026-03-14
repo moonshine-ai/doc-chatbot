@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://www.moonshine.ai/icon.png" type="image/png" sizes="427x427">
   <title>Raspberry Pi Help Bot</title>
   <script src="https://cdn.jsdelivr.net/npm/@asciidoctor/core@2.2.6/dist/browser/asciidoctor.min.js"></script>
   <style>
@@ -289,7 +290,7 @@
       function showResults(data) {
         const results = data.results || [];
         if (results.length === 0) {
-          container.innerHTML = '<p class="empty">No close matches (only results with distance &lt; 0.35 are shown).</p>';
+          container.innerHTML = '<p class="empty">No close matches (only results with distance &lt; 0.3 are shown).</p>';
           return;
         }
         let html = '<div class="results">';

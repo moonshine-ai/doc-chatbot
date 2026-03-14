@@ -4,7 +4,7 @@ Serve a single-page question search app and JSON API.
 
 - Serves the SPA at / (white background, Moonshine logo, search box).
 - API: POST /api/search with JSON {"question": "..."} or GET /api/search?q=...
-  Returns JSON with results (distance < 0.35 only), including asciidoc content
+  Returns JSON with results (distance < 0.3 only), including asciidoc content
   from documentation/documentation/asciidoc/ (full doc or named section by source).
 
 Run:
@@ -38,7 +38,7 @@ except ImportError:
 DEFAULT_PORT = 8080
 DEFAULT_DOC_ROOT = SCRIPT_DIR / "documentation" / "documentation" / "asciidoc"
 DEFAULT_EMBEDDINGS = SCRIPT_DIR / "question-embeddings.json"
-DISTANCE_THRESHOLD = 0.35
+DISTANCE_THRESHOLD = 0.3
 MAX_RESULTS = 20
 
 app = Flask(__name__, static_folder=None)
