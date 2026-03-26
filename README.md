@@ -14,10 +14,10 @@ uv pip install -r requirements.txt
 
 ## Run
 
-The `question-search.py` script presents a query prompt. Type a question in and press return to see the results. Here are a couple of examples:
+The `question_search.py` script presents a query prompt. Type a question in and press return to see the results. Here are a couple of examples:
 
 ```bash
-python question-search.py
+python question_search.py
 ```
 
 ```bash

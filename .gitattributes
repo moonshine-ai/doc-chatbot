@@ -1,2 +1,4 @@
 question-embeddings.json filter=lfs diff=lfs merge=lfs -text
 rpi_topics.json filter=lfs diff=lfs merge=lfs -text
+models-cache filter=lfs diff=lfs merge=lfs -text
+models-cache/models--google--embeddinggemma-300m/blobs/6852f8d561078cc0cebe70ca03c5bfdd0d60a45f9d2e0e1e4cc05b68e9ec329e filter=lfs diff=lfs merge=lfs -text

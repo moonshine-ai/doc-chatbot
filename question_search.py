@@ -91,7 +91,7 @@ class QuestionSearch:
             ort.SessionOptions(),
             providers=["CPUExecutionProvider"],
         )
-        self._tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        self._tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, cache_dir="models-cache")
         self._max_length = max_length
 
     def __len__(self) -> int:
