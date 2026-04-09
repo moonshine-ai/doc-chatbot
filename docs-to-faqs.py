@@ -26,6 +26,13 @@ TWO MODES
 OUTPUT
 ──────
   sections.json   — flat list of sections, each with a full anchor URL
+
+FAQ GENERATION
+──────────────
+  From AsciiDoc (directory):  python docs-to-faqs.py --faq --adoc ./documentation/asciidoc/computers/os
+  From Markdown (one or more files):  python docs-to-faqs.py --faq --markdown data/saikat-policies.md
+  Optional:  --question-prefix "How will he"  → one required Q per section starting with that phrase, section title quoted verbatim, with extra words if needed for grammar (e.g. "… provide Paid Parental Leave?").
+  Writes a sibling <stem>.faq.txt next to each source file (Q:/A: lines; answers 10–15 words from source only). Add --anthropic for Claude instead of Ollama. Use --force to replace an existing .faq.txt.
 """
 
 import argparse
@@ -590,21 +597,7 @@ def query_chroma(
 
 # ── FAQ generation via Ollama ─────────────────────────────────────────────────
 
-
-def generate_faq_questions(
-    adoc_content: str,
-    model: str = "qwen3.5:9b",
-) -> str:
-    """
-    Ask the Ollama model to produce a list of questions a Raspberry Pi user
-    might ask that could be answered by the given AsciiDoc content. Questions
-    are informal and conversational; each should be associated with either the whole document, if it's a general question, or a section, if it's a question about a specific section of the document.
-    There should also be general questions about the whole document, that are not associated with any specific section, that are listed under the "Whole Document" heading.
-    """
-    if ollama_chat is None:
-        raise RuntimeError("ollama package is not installed. pip install ollama")
-
-    system_prompt = """
+FAQ_SYSTEM_PROMPT_ASCIIDOC = """
 You are generating training questions for a voice assistant that answers Raspberry Pi questions.
 
 You will be given a section of Raspberry Pi documentation. Generate questions that real users would actually SAY OUT LOUD to a voice assistant — the kind of casual, sometimes frustrated questions a beginner would speak, not type.
@@ -634,7 +627,103 @@ GOOD examples (casual spoken style):
   "I just want to open a video without using the terminal. Can I do that?"
   "Can I run it without a desktop, like just from the command line?"
 
-Format the output the same way as before: questions grouped under the relevant section heading preceded by #, with a "# Whole Document" section for general questions. Don't refer to the document in the questions themselves."""
+OUTPUT FORMAT:
+- Group items under the relevant section heading as a markdown heading line starting with #, plus a "# Whole Document" section for questions that apply to the whole passage.
+- For each hypothetical question, output exactly two lines:
+  Q: <the question — same casual spoken style as above>
+  A: <one line; exactly 10 to 15 words (count carefully). Summarize only information that appears in the source text for that section (or in the full passage for Whole Document items). Do not add facts, guesses, or general knowledge not stated there. If the text does not support a concise answer, write a short refusal like "Not specified in this section.">
+- Leave one blank line between Q/A pairs if you like, but keep Q: then A: adjacent for each item.
+- Do not refer to "the document" or "the text" in the questions themselves."""
+
+FAQ_SYSTEM_PROMPT_MARKDOWN = """
+You are generating training questions for a voice assistant that answers questions using the document you are given.
+
+You will be given Markdown content. Match the topic of your questions to this material (policies, terms, product information, technical help, etc.). Generate questions that real users would actually SAY OUT LOUD to a voice assistant — the kind of casual, sometimes frustrated questions a beginner would speak, not type.
+
+STYLE RULES:
+- Write like someone talking, not typing. Use contractions (don't, I've, it's, can't).
+- Many good questions start with a situation or problem, then ask the question:
+  "They said I have 30 days to cancel but I'm past that—what happens now?"
+  "I'm not sure I'm reading this right. Does this apply to me if I'm outside the US?"
+- Avoid formal question openers: never start with "Is it possible to", "What option", "Per the documentation", "What command should I use to", "How does one".
+- Use plain words, not doc or legal jargon, unless the user would naturally say it.
+- It's fine for a question to be incomplete or slightly rambly, like someone thinking out loud:
+  "I just want to know if I can share this with my team or if it's only for me."
+  "Wait, does this mean I lose access immediately or at the end of the period?"
+- Mix question lengths: some short ("Is there a fee?"), some longer with context.
+- Include beginner-level confusion questions, not just how-to questions:
+  "I'm not sure what this section is saying. Can someone explain it in plain English?"
+  "What's the difference between this and the other option?"
+
+BAD examples (too formal, don't write like this):
+  "What are the contractual obligations delineated in section 4.2?"
+  "Is compliance with the aforementioned policy mandatory for all users?"
+
+GOOD examples (casual spoken style):
+  "What happens if I break this rule by accident?"
+  "Can I get a refund if I change my mind?"
+  "I'm on my phone—where do I find that?"
+
+OUTPUT FORMAT:
+- Group items under the relevant section heading as a markdown heading line starting with #, plus a "# Whole Document" section for questions that apply to the whole passage.
+- For each hypothetical question, output exactly two lines:
+  Q: <the question — same casual spoken style as above>
+  A: <one line; exactly 10 to 15 words (count carefully). Summarize only information that appears in the source Markdown for that section (or in the full passage for Whole Document items). Do not add facts, guesses, or general knowledge not stated there. If the text does not support a concise answer, write a short refusal like "Not specified in this section.">
+- Leave one blank line between Q/A pairs if you like, but keep Q: then A: adjacent for each item.
+- Do not refer to "the document" or "the text" in the questions themselves."""
+
+# Appended when --question-prefix is set; {prefix} is the user-supplied string (trimmed).
+FAQ_QUESTION_PREFIX_BLOCK = """
+QUESTION PREFIX MODE (required):
+- For every section heading in your output (each line that starts with # followed by a title), EXCEPT "# Whole Document", you MUST include exactly one additional Q/A pair in that section's block, in addition to your other questions for that section.
+
+PREFIX QUESTION SHAPE (strict — read carefully):
+- The Q: line must be VERY SHORT. Pattern: {prefix} [at most one grammar helper word if required] <exact section title>?
+- After the section title, STOP. End with ? only. Do not add anything else to the question — no extra clauses, no "if…", "when…", "actually", "how come", no commentary from the section body, and no follow-up phrases.
+- The full section title from the # line (no #) must appear as an exact substring — same spelling and capitalization (e.g. "Save Muni and BART", "Universal Pre-K and Daycare").
+- You MAY insert at most one short verb or preposition between "{prefix}" and the title ONLY when grammar requires it (e.g. "provide" before "Paid Parental Leave", "address" before a noun phrase). Do not insert extra words for color or emphasis.
+
+BAD (too long — never do this):
+  Q: How will he Save Muni and BART if there's no money for their operations?
+  Q: How will he get Universal Pre-K and Daycare actually passed when it's been talked about forever?
+
+GOOD (minimal — do this):
+  Q: How will he Save Muni and BART?
+  Q: How will he provide Universal Pre-K and Daycare?
+  Q: How will he End the Wars?
+
+- The A: line for that pair must follow the same rules as all other answers: exactly 10 to 15 words, summarizing only information from that section in the source. Put nuance and detail in A:, not in the Q:.
+- For AsciiDoc source, use the same section titles as you use on your output # heading lines (derived from the AsciiDoc headings)."""
+
+
+def _faq_system_prompt(
+    prompt_kind: str, question_prefix: str | None = None
+) -> str:
+    if prompt_kind == "markdown":
+        base = FAQ_SYSTEM_PROMPT_MARKDOWN.strip()
+    else:
+        base = FAQ_SYSTEM_PROMPT_ASCIIDOC.strip()
+    if question_prefix and question_prefix.strip():
+        base = base + "\n\n" + FAQ_QUESTION_PREFIX_BLOCK.format(
+            prefix=question_prefix.strip()
+        )
+    return base
+
+
+def generate_faq_questions(
+    adoc_content: str,
+    model: str = "qwen3.5:9b",
+    prompt_kind: str = "asciidoc",
+    question_prefix: str | None = None,
+) -> str:
+    """
+    Ask the Ollama model for Q:/A: pairs: spoken-style questions plus 10–15 word
+    answers grounded only in the given source (AsciiDoc or Markdown per prompt_kind).
+    """
+    if ollama_chat is None:
+        raise RuntimeError("ollama package is not installed. pip install ollama")
+
+    system_prompt = _faq_system_prompt(prompt_kind, question_prefix=question_prefix)
 
     response = ollama_chat(
         model=model,
@@ -653,50 +742,25 @@ def generate_faq_questions_anthropic(
     adoc_content: str,
     adoc_path: Path,
     model: str = "claude-sonnet-4-6",
+    prompt_kind: str = "asciidoc",
+    question_prefix: str | None = None,
+    force: bool = False,
 ):
     """
-    Same as generate_faq_questions() but uses Anthropic's API with Claude Sonnet.
-    Default is claude-sonnet-4-6 (current Sonnet). Requires ANTHROPIC_API_KEY and: pip install anthropic
+    Same as generate_faq_questions() but uses Anthropic's API with Claude.
+    Default is claude-sonnet-4-6. Requires ANTHROPIC_API_KEY and: pip install anthropic
     """
     if anthropic is None:
         raise RuntimeError(
             "anthropic package is not installed. pip install anthropic"
         )
 
-    system_prompt = """
-You are generating training questions for a voice assistant that answers Raspberry Pi questions.
-
-You will be given a section of Raspberry Pi documentation. Generate questions that real users would actually SAY OUT LOUD to a voice assistant — the kind of casual, sometimes frustrated questions a beginner would speak, not type.
-
-STYLE RULES:
-- Write like someone talking, not typing. Use contractions (don't, I've, it's, can't).
-- Many good questions start with a situation or problem, then ask the question:
-  "My audio is coming out of HDMI but I want it through the headphone jack. How do I change that?"
-  "I installed the Lite version and there's no media player. What do I need to get one?"
-- Avoid formal question openers: never start with "Is it possible to", "What option", "Can I tell the player to", "What command should I use to", "How does one".
-- Use plain words, not doc words. Say "flags" not "CLI options", say "headphone jack" not "audio output device", say "close when it's done" not "terminate upon completion".
-- It's fine for a question to be incomplete or slightly rambly, like someone thinking out loud:
-  "I just want the video to go fullscreen automatically. Is there a flag for that or something?"
-  "Wait, can I play audio and video at the same time to different outputs?"
-- Mix question lengths: some short ("Does VLC work on Pi Lite?"), some longer with context.
-- Include beginner-level confusion questions, not just how-to questions:
-  "I'm not sure if I have VLC installed. How do I check?"
-  "What even is ALSA? Do I need to know about it to change my audio output?"
-
-BAD examples (too formal, don't write like this):
-  "What command should I run to see a list of all available audio devices?"
-  "Can I navigate to a file directly from the Media menu option?"
-  "Is there a way to run this without opening any graphical windows at all?"
-
-GOOD examples (casual spoken style):
-  "How do I see what audio devices I've got?"
-  "I just want to open a video without using the terminal. Can I do that?"
-  "Can I run it without a desktop, like just from the command line?"
-
-Format the output the same way as before: questions grouped under the relevant section heading preceded by #, with a "# Whole Document" section for general questions. Don't refer to the document in the questions themselves."""
+    system_prompt = _faq_system_prompt(
+        prompt_kind, question_prefix=question_prefix
+    )
 
     output_file = adoc_path.with_suffix(".faq.txt")
-    if output_file.exists():
+    if output_file.exists() and not force:
         print(f"[faq] FAQ already exists for {adoc_path}")
         return
 
@@ -729,6 +793,8 @@ def run_faq_for_adoc(
     adoc_path: Path,
     model: str = "qwen3.5:9b",
     use_anthropic: bool = False,
+    question_prefix: str | None = None,
+    force: bool = False,
 ) -> str:
     """Load an .adoc file (with includes resolved), then generate FAQ questions via Ollama or Anthropic."""
     lines = _resolve_includes(Path(adoc_path))
@@ -736,19 +802,78 @@ def run_faq_for_adoc(
         raise ValueError(f"[faq] No lines found in {adoc_path}")
     adoc_content = "\n".join(lines)
     if use_anthropic:
-        return generate_faq_questions_anthropic(adoc_content, adoc_path, model=model)
-    return generate_faq_questions(adoc_content, model=model)
+        return generate_faq_questions_anthropic(
+            adoc_content,
+            adoc_path,
+            model=model,
+            question_prefix=question_prefix,
+            force=force,
+        )
+    return generate_faq_questions(
+        adoc_content, model=model, question_prefix=question_prefix
+    )
+
+
+def run_faq_for_markdown(
+    md_path: Path,
+    model: str = "qwen3.5:9b",
+    use_anthropic: bool = False,
+    question_prefix: str | None = None,
+    force: bool = False,
+) -> None:
+    """Load a Markdown file and write hypothetical questions beside it as <name>.faq.txt (same as AsciiDoc flow)."""
+    md_path = Path(md_path).resolve()
+    if not md_path.is_file():
+        raise ValueError(f"[faq] Not a file: {md_path}")
+    text = md_path.read_text(encoding="utf-8", errors="replace").strip()
+    if not text:
+        raise ValueError(f"[faq] Empty file: {md_path}")
+
+    if use_anthropic:
+        generate_faq_questions_anthropic(
+            text,
+            md_path,
+            model=model,
+            prompt_kind="markdown",
+            question_prefix=question_prefix,
+            force=force,
+        )
+        return
+
+    output_file = md_path.with_suffix(".faq.txt")
+    if output_file.exists() and not force:
+        print(f"[faq] FAQ already exists for {md_path}")
+        return
+
+    result = generate_faq_questions(
+        text,
+        model=model,
+        prompt_kind="markdown",
+        question_prefix=question_prefix,
+    )
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(result)
+    print(f"[faq] Wrote {output_file}")
+
 
 def run_faq_for_all_adocs(
     adoc_dir: Path,
     model: str = "qwen3.5:9b",
     use_anthropic: bool = False,
+    question_prefix: str | None = None,
+    force: bool = False,
 ) -> str:
     """Load all .adoc files in a directory, then generate FAQ questions via Ollama or Anthropic."""
     for adoc_path in adoc_dir.rglob("*.adoc"):
         print(f"[faq] Generating FAQ for {adoc_path}")
         try:
-            run_faq_for_adoc(adoc_path, model=model, use_anthropic=use_anthropic)
+            run_faq_for_adoc(
+                adoc_path,
+                model=model,
+                use_anthropic=use_anthropic,
+                question_prefix=question_prefix,
+                force=force,
+            )
         except Exception as e:
             print(f"[faq] Error generating FAQ for {adoc_path}: {e}")
             continue
@@ -780,12 +905,18 @@ def main() -> None:
     parser.add_argument(
         "--faq",
         action="store_true",
-        help="Generate FAQ questions for an AsciiDoc file via Ollama",
+        help="Generate FAQ questions via Ollama or Anthropic (see --adoc or --markdown)",
     )
     parser.add_argument(
         "--adoc",
         type=str,
-        help="Path to .adoc file (e.g. documentation/asciidoc/computers/os/playing-audio-and-video.adoc); used with --faq",
+        help="Directory of .adoc files to process recursively (*.adoc); used with --faq",
+    )
+    parser.add_argument(
+        "--markdown",
+        nargs="+",
+        metavar="PATH",
+        help="One or more Markdown files (e.g. data/saikat-policies.md); used with --faq",
     )
     parser.add_argument(
         "--model",
@@ -798,18 +929,53 @@ def main() -> None:
         action="store_true",
         help="Use Anthropic API (Claude 3.5 Sonnet) for --faq instead of Ollama; requires ANTHROPIC_API_KEY",
     )
+    parser.add_argument(
+        "--question-prefix",
+        type=str,
+        default=None,
+        metavar="TEXT",
+        help='With --faq: one extra Q/A per section; Q starts with TEXT, includes heading verbatim, may add words for grammar (e.g. "How will he provide Paid Parental Leave?")',
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="With --faq: overwrite existing .faq.txt files instead of skipping",
+    )
     args = parser.parse_args()
 
     if args.faq:
-        if not args.adoc:
-            parser.error("--faq requires --adoc")
+        if args.markdown and args.adoc:
+            parser.error("Use either --markdown or --adoc with --faq, not both")
+        if not args.adoc and not args.markdown:
+            parser.error("--faq requires --adoc (directory of .adoc files) or --markdown (one or more .md files)")
         model = args.model
         if args.anthropic and model == "qwen3.5:9b":
             model = "claude-sonnet-4-6"
+        if args.markdown:
+            for raw in args.markdown:
+                md_path = Path(raw)
+                if not md_path.exists():
+                    parser.error(f"Markdown path not found: {md_path}")
+                if not md_path.is_file():
+                    parser.error(f"Not a file: {md_path}")
+                print(f"[faq] Generating FAQ for {md_path}")
+                try:
+                    run_faq_for_markdown(
+                        md_path,
+                        model=model,
+                        use_anthropic=args.anthropic,
+                        question_prefix=args.question_prefix,
+                        force=args.force,
+                    )
+                except Exception as e:
+                    print(f"[faq] Error generating FAQ for {md_path}: {e}")
+            return
         run_faq_for_all_adocs(
             Path(args.adoc),
             model=model,
             use_anthropic=args.anthropic,
+            question_prefix=args.question_prefix,
+            force=args.force,
         )
         return
 

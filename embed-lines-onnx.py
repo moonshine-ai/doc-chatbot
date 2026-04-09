@@ -4,8 +4,13 @@ Embed lines of text with Moonshine Voice Embedding Gemma 300M via ONNX Runtime.
 
 1. Downloads the model with moonshine_voice.get_embedding_model().
 2. Loads the ONNX model with onnxruntime.
-3. Reads sentences from .faq.txt files in a directory (skips lines starting with #).
-4. Writes one JSON object per line: {"sentence": "...", "embedding": [...], "source": "path/to/file#section-slug"}
+3. Reads .faq.txt files:
+   - Directory mode: all *.faq.txt under a directory (legacy: one line per sentence, or Q:/A: pairs).
+   - File mode: one or more paths like data/saikat-policies.faq.txt with a sibling
+     saikat-policies.md (same stem). Parses Q:/A: pairs, matches # sections to Markdown
+     ### headings, and stores stub (header text from the .md section) plus answer text.
+4. Writes one JSON object per line:
+   {"sentence": "...", "question": "...", "stub": "...", "answer": "...", "embedding": [...], "source": "..."}
 
 Default input: ../documentation/documentation/asciidoc (all *.faq.txt files there).
 
@@ -46,29 +51,146 @@ def _slugify(text: str) -> str:
     return text or "section"
 
 
-def _sentences_from_faq_dir(dir_path: Path):
-    """Yield (sentence, source) from all .faq.txt files. source = path/to/file#section-slug."""
+def _norm_heading_key(text: str) -> str:
+    """Normalize FAQ or Markdown heading text for lookup."""
+    t = text.strip()
+    t = re.sub(r"^#+\s*", "", t)
+    t = re.sub(r"\s+", " ", t).strip().lower()
+    return t
+
+
+_MD_HEADING_RE = re.compile(r"^(#{1,6})\s+(.+)$")
+
+
+def _md_heading_stubs(md_text: str) -> dict[str, str]:
+    """
+    Map normalized heading text -> stub string (visible heading from the .md file).
+    Later headings with the same normalized key overwrite earlier ones.
+    """
+    out: dict[str, str] = {}
+    for line in md_text.splitlines():
+        m = _MD_HEADING_RE.match(line.strip())
+        if not m:
+            continue
+        title = m.group(2).strip()
+        out[_norm_heading_key(title)] = title
+    return out
+
+
+def _sibling_markdown_path(faq_path: Path) -> Path:
+    """saikat-policies.faq.txt -> saikat-policies.md"""
+    name = faq_path.name
+    if not name.endswith(".faq.txt"):
+        raise ValueError(f"Expected *.faq.txt, got {faq_path}")
+    return faq_path.parent / f"{name[:-len('.faq.txt')]}.md"
+
+
+def _iter_faq_qa_records(
+    faq_path: Path,
+    *,
+    path_part: str,
+    md_stubs: dict[str, str] | None,
+):
+    """
+    Yield dicts with keys: question, answer, stub, source (and section slug in source).
+
+    md_stubs: from _md_heading_stubs; if None, stub is always "".
+    """
+    current_heading = "Whole Document"
+    current_slug = _slugify(current_heading)
+
+    lines = faq_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    i = 0
+    while i < len(lines):
+        raw = lines[i].rstrip("\n\r")
+        line = raw.lstrip("- ").strip()
+        if not line:
+            i += 1
+            continue
+        if line.startswith("#"):
+            current_heading = line.lstrip("#").strip() or "Section"
+            current_slug = _slugify(current_heading)
+            i += 1
+            continue
+
+        upper = line[:2].upper()
+        if upper == "Q:":
+            q = line[2:].strip()
+            ans = ""
+            i += 1
+            if i < len(lines):
+                nxt = lines[i].lstrip("- ").strip()
+                if nxt[:2].upper() == "A:":
+                    ans = nxt[2:].strip()
+                    i += 1
+            stub = ""
+            if md_stubs is not None:
+                stub = md_stubs.get(_norm_heading_key(current_heading), "")
+            source = f"{path_part}#{current_slug}"
+            yield {
+                "question": q,
+                "answer": ans,
+                "stub": stub,
+                "source": source,
+            }
+            continue
+
+        if upper == "A:":
+            i += 1
+            continue
+
+        # Legacy: one line = one sentence to embed
+        stub = ""
+        if md_stubs is not None:
+            stub = md_stubs.get(_norm_heading_key(current_heading), "")
+        yield {
+            "question": line,
+            "answer": "",
+            "stub": stub,
+            "source": f"{path_part}#{current_slug}",
+        }
+        i += 1
+
+
+def _faq_path_part_for_source(faq_path: Path) -> str:
+    """path/to/foo.faq.txt -> path/to/foo.faq (for source ids, prefer cwd-relative)."""
+    faq_path = faq_path.resolve()
+    try:
+        rel = faq_path.relative_to(Path.cwd())
+    except ValueError:
+        rel = faq_path
+    return str(rel.with_suffix("")).replace("\\", "/")
+
+
+def _records_from_faq_and_md(faq_path: Path, md_path: Path) -> list[dict]:
+    """Pair a .faq.txt with its sibling .md."""
+    md_text = md_path.read_text(encoding="utf-8", errors="replace")
+    stubs = _md_heading_stubs(md_text)
+    path_part = _faq_path_part_for_source(faq_path)
+    return list(
+        _iter_faq_qa_records(
+            faq_path.resolve(),
+            path_part=path_part,
+            md_stubs=stubs,
+        )
+    )
+
+
+def _records_from_faq_dir(dir_path: Path) -> list[dict]:
+    """All *.faq.txt under dir; no .md pairing (stub left empty)."""
     if not dir_path.is_dir():
         raise FileNotFoundError(f"Not a directory: {dir_path}")
+    out: list[dict] = []
     for faq_path in sorted(dir_path.rglob("*.faq.txt")):
         try:
             rel = faq_path.relative_to(dir_path)
         except ValueError:
             rel = faq_path
         path_part = str(rel.with_suffix("")).replace("\\", "/")
-        current_section = "whole-document"
-        with open(faq_path, encoding="utf-8") as f:
-            for line in f:
-                raw = line.rstrip("\n\r")
-                line = raw.lstrip("- ")
-                if not line:
-                    continue
-                if line.lstrip().startswith("#"):
-                    heading = line.lstrip("#").strip()
-                    current_section = _slugify(heading) if heading else "section"
-                    continue
-                source = f"{path_part}#{current_section}"
-                yield line, source
+        out.extend(
+            _iter_faq_qa_records(faq_path, path_part=path_part, md_stubs=None)
+        )
+    return out
 
 
 def main() -> int:
@@ -79,10 +201,11 @@ def main() -> int:
         description="Embed lines with Embedding Gemma 300M (ONNX Runtime)"
     )
     parser.add_argument(
-        "input_dir",
-        nargs="?",
-        default=str(default_faq_dir.resolve()),
-        help="Directory containing .faq.txt files (default: %(default)s)",
+        "inputs",
+        nargs="*",
+        default=None,
+        help="Directory of .faq.txt files (recursive), or one or more *.faq.txt paths "
+        "with sibling .md files (same stem). Omit to use the default asciidoc directory.",
     )
     parser.add_argument(
         "-o",
@@ -163,15 +286,38 @@ def main() -> int:
     print(f"Loading tokenizer {args.tokenizer}...", file=sys.stderr)
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 
-    faq_dir = Path(args.input_dir).resolve()
-    items = list(_sentences_from_faq_dir(faq_dir))
-    if not items:
-        print(f"No sentences found in .faq.txt files under {faq_dir}", file=sys.stderr)
+    if args.inputs:
+        paths = [Path(p).resolve() for p in args.inputs]
+    else:
+        paths = [default_faq_dir.resolve()]
+
+    if len(paths) == 1 and paths[0].is_dir():
+        records = _records_from_faq_dir(paths[0])
+        src_desc = str(paths[0])
+    else:
+        records = []
+        for p in paths:
+            if not p.is_file():
+                print(f"Not a file: {p}", file=sys.stderr)
+                return 1
+            if not p.name.endswith(".faq.txt"):
+                print(f"Expected a .faq.txt file: {p}", file=sys.stderr)
+                return 1
+            md = _sibling_markdown_path(p)
+            if not md.is_file():
+                print(f"Missing sibling Markdown for {p}: expected {md}", file=sys.stderr)
+                return 1
+            records.extend(_records_from_faq_and_md(p, md))
+        src_desc = ", ".join(str(p) for p in paths)
+
+    if not records:
+        print(f"No FAQ records found (inputs: {src_desc})", file=sys.stderr)
         return 1
-    print(f"Embedding {len(items)} sentences from .faq.txt under {faq_dir}...", file=sys.stderr)
+    print(f"Embedding {len(records)} questions from {src_desc}...", file=sys.stderr)
 
     with open(args.output, "w", encoding="utf-8") as fout:
-        for sentence, source in items:
+        for rec in records:
+            sentence = rec["question"]
             encoded = tokenizer(
                 sentence,
                 return_tensors="np",
@@ -193,7 +339,14 @@ def main() -> int:
             vec = embedding.astype(np.float32).tolist()
             vec = _normalize_l2(vec)
 
-            obj = {"sentence": sentence, "embedding": vec, "source": source}
+            obj = {
+                "sentence": sentence,
+                "question": rec["question"],
+                "stub": rec["stub"],
+                "answer": rec["answer"],
+                "embedding": vec,
+                "source": rec["source"],
+            }
             fout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
     print("Done.", file=sys.stderr)
