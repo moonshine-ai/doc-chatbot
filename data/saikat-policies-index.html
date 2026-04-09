@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Policy Q&amp;A | Saikat for Congress</title>
+  <meta name="description"
+    content="Ask questions about Saikat’s policy platform — housing, transit, healthcare, and more.">
+  <link rel="icon" href="https://www.saikat.us/assets/new_design/meta/favicon-96x96.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Inspired by https://www.saikat.us/en/policies — warm beige canvas, brown text, orange CTAs, Poppins + display headline */
+    :root {
+      --bg-page: #e8dcc8;
+      --bg-nav: #ffffff;
+      --bg-card: #ffffff;
+      --text: #4a3a28;
+      --text-muted: #6b5d4a;
+      --accent-heading: #0a6e8c;
+      --accent-cta: #ff4f12;
+      --accent-cta-hover: #e54610;
+      --border: #d4c4b0;
+      --radius-pill: 9999px;
+      --nav-h: 72px;
+      --font-body: "Poppins", ui-sans-serif, system-ui, sans-serif;
+      --font-display: "Bebas Neue", Impact, sans-serif;
+      --shadow: 0 1px 3px rgba(74, 58, 40, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg-page);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Nav — mirrors site top bar */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      background: var(--bg-nav);
+      box-shadow: var(--shadow);
+    }
+
+    @media (min-width: 1024px) {
+      .nav {
+        padding: 0 2rem;
+      }
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: none;
+      gap: 1.75rem;
+      align-items: center;
+      font-size: 0.9375rem;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-links a:hover {
+      opacity: 0.75;
+    }
+
+    .nav-donate {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.25rem;
+      background: var(--accent-cta);
+      color: #fff !important;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+    }
+
+    .nav-donate:hover {
+      background: var(--accent-cta-hover);
+    }
+
+    /* Hero — shallow band like saikat.us/en/policies (not a tall billboard) */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 148px;
+      background: #3d3428;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        height: 188px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero {
+        height: 204px;
+      }
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      object-position: center 22%;
+      display: block;
+      opacity: 0.92;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(61, 52, 40, 0.85) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.65rem 1rem 0.85rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-inner {
+        padding: 0.75rem 2rem 1rem;
+      }
+    }
+
+    .hero-kicker {
+      font-family: var(--font-display);
+      font-size: clamp(1.85rem, 5vw, 2.75rem);
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1;
+      margin: 0 0 0.35rem;
+    }
+
+    .hero-sub {
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      max-width: 36rem;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    @media (min-width: 768px) {
+      .hero-sub {
+        font-size: 0.875rem;
+      }
+    }
+
+    .main {
+      flex: 1;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-heading);
+      margin: 0 0 0.5rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: var(--text);
+    }
+
+    .page-lede {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin: 0 0 1.75rem;
+    }
+
+    .search-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .search-form {
+      margin: 0;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .search-row:focus-within {
+      border-color: var(--accent-heading);
+      box-shadow: 0 0 0 2px rgba(10, 110, 140, 0.15);
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      padding: 0.85rem 1.15rem;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .search-input::placeholder {
+      color: #9a8b7a;
+    }
+
+    .search-btn {
+      padding: 0.65rem 1.35rem;
+      margin: 0.25rem;
+      background: var(--accent-cta);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .search-btn:hover {
+      background: var(--accent-cta-hover);
+    }
+
+    .search-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .search-field-wrap {
+      position: relative;
+    }
+
+    .suggest-panel {
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(74, 58, 40, 0.1);
+      max-height: 14.5rem;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .suggest-panel[hidden] {
+      display: none !important;
+    }
+
+    .suggest-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.95rem;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: var(--text);
+      cursor: pointer;
+      line-height: 1.35;
+    }
+
+    .suggest-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggest-item:hover,
+    .suggest-item:focus {
+      background: #faf8f5;
+      outline: none;
+    }
+
+    .suggest-hint {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 0.4rem 0.95rem 0.15rem;
+    }
+
+    /* Results — accordion cards like policy sections */
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .result {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .result--policy {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .result--policy:hover {
+      background: #faf8f5;
+    }
+
+    .result--policy:focus {
+      outline: none;
+    }
+
+    .result--policy:focus-visible {
+      outline: 2px solid var(--accent-heading);
+      outline-offset: 2px;
+    }
+
+    .result-inner {
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: inherit;
+    }
+
+    .result--policy .result-distance {
+      align-self: center;
+    }
+
+    .result summary {
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: #fff;
+      transition: background 0.15s;
+    }
+
+    .result summary:hover {
+      background: #faf8f5;
+    }
+
+    .result summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .result summary::after {
+      content: "▼";
+      font-size: 0.65em;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .result[open] summary::after {
+      transform: rotate(-180deg);
+    }
+
+    .result-head {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .result-sentence {
+      margin: 0;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .result--policy .result-sentence {
+      color: var(--accent-heading);
+    }
+
+    .result-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .result-answer {
+      font-size: 0.875rem;
+      color: var(--text);
+      margin: 0.35rem 0 0;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--border);
+    }
+
+    .result-answer-label {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-right: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .result-distance {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .result-body {
+      padding: 0 1rem 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9375rem;
+    }
+
+    .result-body .content-doc {
+      line-height: 1.6;
+    }
+
+    .result-body .content-doc pre {
+      background: #f5f2ed;
+      padding: 0.75rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+    }
+
+    .result-body .content-error {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .loading,
+    .empty,
+    .error-msg {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .error-msg {
+      color: #c62828;
+    }
+
+    .footer-note {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .footer-note a {
+      color: var(--accent-heading);
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-logo" href="https://www.saikat.us/en" target="_blank" rel="noopener">
+        <img src="https://www.saikat.us/assets/new_design/Logo.svg" alt="Saikat for Congress" width="140" height="36">
+      </a>
+      <div class="nav-links">
+        <a href="https://www.saikat.us/en/policies">Issues</a>
+        <a href="https://www.saikat.us/en/meet-saikat">About</a>
+        <a href="https://www.saikat.us/en/volunteer">Get Involved</a>
+      </div>
+      <a class="nav-donate" href="https://secure.actblue.com/donate/saikat?refcode=website-nav" target="_blank"
+        rel="noopener">Donate</a>
+    </nav>
+
+    <header class="hero" role="banner">
+      <img class="hero-img"
+        src="https://www.saikat.us/_next/image?url=%2Fassets%2Fnew_design%2Fphotos%2FDSC02701.JPG&amp;w=1920&amp;q=85"
+        alt="" width="1920" height="220">
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="hero-kicker">THE PLAN</p>
+        <p class="hero-sub">Make San Francisco livable. Rebuild the American Dream. Save our democracy.</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <p class="section-label">Have a question?</p>
+      <p class="page-lede">Talk to RoboSaikat, his AI clone!</p>
+      <div class="search-card">
+        <form class="search-form" id="searchForm" action="#" method="get">
+          <div class="search-field-wrap">
+            <div class="search-row">
+              <input type="text" name="q" class="search-input" id="query" placeholder="What would you like to know?"
+                autocomplete="off" autofocus aria-autocomplete="list" aria-controls="suggestPanel"
+                aria-expanded="false">
+              <button type="submit" class="search-btn" id="submitBtn">Ask Saikat</button>
+            </div>
+            <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Closest matching questions" hidden>
+            </div>
+          </div>
+        </form>
+        <div id="resultsContainer"></div>
+      </div>
+
+      <p class="footer-note">
+        Official policy platform: <a href="https://www.saikat.us/en/policies" target="_blank"
+          rel="noopener">saikat.us/en/policies</a>
+      </p>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('searchForm');
+      var queryEl = document.getElementById('query');
+      var submitBtn = document.getElementById('submitBtn');
+      var container = document.getElementById('resultsContainer');
+      var suggestPanel = document.getElementById('suggestPanel');
+      var suggestTimer = null;
+      var suggestAbort = null;
+      var searchAbort = null;
+      var SUGGEST_DEBOUNCE_MS = 240;
+      var SUGGEST_MIN_CHARS = 2;
+
+      function setLoading(loading) {
+        submitBtn.disabled = loading;
+      }
+
+      function hideSuggestions() {
+        suggestPanel.hidden = true;
+        suggestPanel.innerHTML = '';
+        queryEl.setAttribute('aria-expanded', 'false');
+      }
+
+      function showSuggestions(items) {
+        if (!items || items.length === 0) {
+          hideSuggestions();
+          return;
+        }
+        suggestPanel.innerHTML = '';
+        var hint = document.createElement('div');
+        hint.className = 'suggest-hint';
+        hint.textContent = 'Closest matches';
+        suggestPanel.appendChild(hint);
+        items.forEach(function (it) {
+          var t = (it.sentence || '').trim();
+          if (!t) return;
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'suggest-item';
+          btn.setAttribute('role', 'option');
+          btn.textContent = t;
+          btn.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+          });
+          btn.addEventListener('click', function () {
+            queryEl.value = t;
+            hideSuggestions();
+            runSearch(t);
+          });
+          suggestPanel.appendChild(btn);
+        });
+        suggestPanel.hidden = false;
+        queryEl.setAttribute('aria-expanded', 'true');
+      }
+
+      function fetchSuggestions(text) {
+        if (suggestAbort) {
+          suggestAbort.abort();
+        }
+        var t = (text || '').trim();
+        if (t.length < SUGGEST_MIN_CHARS) {
+          hideSuggestions();
+          return;
+        }
+        suggestAbort = new AbortController();
+        fetch('/api/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: t }),
+          signal: suggestAbort.signal
+        })
+          .then(function (res) {
+            if (!res.ok) return { suggestions: [] };
+            return res.json();
+          })
+          .then(function (data) {
+            showSuggestions(data.suggestions || []);
+          })
+          .catch(function (err) {
+            if (err.name === 'AbortError') return;
+            hideSuggestions();
+          });
+      }
+
+      function scheduleSuggestions() {
+        clearTimeout(suggestTimer);
+        suggestTimer = setTimeout(function () {
+          fetchSuggestions(queryEl.value);
+        }, SUGGEST_DEBOUNCE_MS);
+      }
+
+      function clearResultsOnTyping() {
+        container.innerHTML = '';
+        if (searchAbort) {
+          searchAbort.abort();
+          searchAbort = null;
+        }
+      }
+
+      container.addEventListener('click', function (e) {
+        var card = e.target.closest('.result--policy[data-policy-url]');
+        if (!card) return;
+        if (e.target.closest('a[href]')) return;
+        e.preventDefault();
+        window.open(card.getAttribute('data-policy-url'), '_blank', 'noopener,noreferrer');
+      });
+
+      container.addEventListener('keydown', function (e) {
+        var card = e.target.closest('.result--policy[data-policy-url]');
+        if (!card || e.target !== card) return;
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        window.open(card.getAttribute('data-policy-url'), '_blank', 'noopener,noreferrer');
+      });
+
+      queryEl.addEventListener('input', function () {
+        clearResultsOnTyping();
+        scheduleSuggestions();
+      });
+
+      queryEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          hideSuggestions();
+        }
+      });
+
+      queryEl.addEventListener('blur', function () {
+        setTimeout(hideSuggestions, 200);
+      });
+
+      function escapeHtml(s) {
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function renderResult(r, index, defaultOpen) {
+        var hasContent = r.content_adoc || r.content_error;
+        var openAttr = defaultOpen ? ' open' : '';
+        var sourceLabel = r.source ? r.source.replace(/#/g, ' → ') : '';
+        var bodyHtml = '';
+        if (hasContent) {
+          if (r.content_error) {
+            bodyHtml = '<p class="content-error">' + escapeHtml(r.content_error) + '</p>';
+          } else if (r.content_adoc) {
+            bodyHtml = '<pre class="content-doc">' + escapeHtml(r.content_adoc) + '</pre>';
+          }
+        }
+        var headBlock =
+          '<p class="result-sentence">' + escapeHtml(r.sentence) + '</p>' +
+          (r.answer ? '<p class="result-answer"><span class="result-answer-label">Answer</span>' + escapeHtml(r.answer) + '</p>' : '') +
+          (sourceLabel ? '<p class="result-meta">' + escapeHtml(sourceLabel) + '</p>' : '');
+        if (r.policy_url) {
+          return (
+            '<div class="result result--policy" role="link" tabindex="0" data-policy-url="' +
+            escapeHtml(r.policy_url) +
+            '" aria-label="' +
+            escapeHtml('Open policy: ' + r.sentence) +
+            '">' +
+            '<div class="result-inner">' +
+            '<span class="result-head">' +
+            headBlock +
+            '</span>' +
+            '<span class="result-distance">distance ' + r.distance + '</span>' +
+            '</div>' +
+            (bodyHtml ? '<div class="result-body">' + bodyHtml + '</div>' : '') +
+            '</div>'
+          );
+        }
+        return (
+          '<div class="result">' +
+          '<details' + openAttr + '>' +
+          '<summary>' +
+          '<span class="result-head">' +
+          headBlock +
+          '</span>' +
+          '<span class="result-distance">distance ' + r.distance + '</span>' +
+          '</summary>' +
+          (bodyHtml ? '<div class="result-body">' + bodyHtml + '</div>' : '') +
+          '</details>' +
+          '</div>'
+        );
+      }
+
+      function showResults(data) {
+        var results = data.results || [];
+        if (results.length === 0) {
+          container.innerHTML = '<p class="empty">No close matches (only results with distance &lt; 0.3 are shown).</p>';
+          return;
+        }
+        var html = '<div class="results">';
+        results.forEach(function (r, i) {
+          html += renderResult(r, i, i === 0);
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      }
+
+      function showError(msg) {
+        container.innerHTML = '<p class="error-msg">' + escapeHtml(msg) + '</p>';
+      }
+
+      function runSearch(q) {
+        if (!q) return;
+        hideSuggestions();
+        if (searchAbort) {
+          searchAbort.abort();
+        }
+        searchAbort = new AbortController();
+        var signal = searchAbort.signal;
+        var url = new URL(window.location.href);
+        url.searchParams.set('q', q);
+        window.history.replaceState({ q: q }, '', url.toString());
+        container.innerHTML = '<p class="loading">Searching…</p>';
+        setLoading(true);
+        fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: q }),
+          signal: signal
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.status === 400 ? 'Missing question' : 'Search failed');
+            return res.json();
+          })
+          .then(showResults)
+          .catch(function (err) {
+            if (err.name === 'AbortError') return;
+            showError(err.message || 'Request failed');
+          })
+          .finally(function () {
+            setLoading(false);
+          });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var q = (queryEl.value || '').trim();
+        if (!q) return;
+        hideSuggestions();
+        runSearch(q);
+      });
+
+      (function checkUrlQuery() {
+        var params = new URLSearchParams(window.location.search);
+        var q = params.get('q');
+        if (q && (q = q.trim())) {
+          queryEl.value = q;
+          runSearch(q);
+        }
+      })();
+    })();
+  </script>
+</body>
+
+</html>

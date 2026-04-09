@@ -4,7 +4,8 @@ Serve a single-page question search app and JSON API.
 
 - Serves the SPA at / (white background, Moonshine logo, search box).
 - API: POST /api/search with JSON {"question": "..."} or GET /api/search?q=...
-  Returns JSON with results (distance < 0.3 only), including asciidoc content
+  POST /api/suggest with JSON {"q": "..."} — top embedding-nearest questions for live suggestions.
+  Search returns JSON with results (distance < 0.3 only), including asciidoc content
   from documentation/documentation/asciidoc/ (full doc or named section by source).
 
 Run:
@@ -28,6 +29,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from question_search import QuestionSearch
+from saikat_policy_anchors import policies_url_for_stub
 
 # -----------------------------------------------------------------------------
 # Doc content extraction (inlined so the server always uses this code)
@@ -173,6 +175,8 @@ DEFAULT_DOC_ROOT = SCRIPT_DIR / "documentation" / "documentation" / "asciidoc"
 DEFAULT_EMBEDDINGS = SCRIPT_DIR / "question-embeddings.json"
 DISTANCE_THRESHOLD = 0.3
 MAX_RESULTS = 20
+SUGGEST_MIN_LEN = 2
+SUGGEST_MAX_ITEMS = 6
 
 app = Flask(__name__, static_folder=None)
 app.config["JSON_SORT_KEYS"] = False
@@ -194,6 +198,12 @@ def index():
     return send_from_directory(SCRIPT_DIR, "index.html")
 
 
+@app.route("/saikat-policies")
+def saikat_policies_index():
+    """Saikat campaign–styled policy Q&A (uses same /api/search as the main SPA)."""
+    return send_from_directory(SCRIPT_DIR / "data", "saikat-policies-index.html")
+
+
 @app.route("/api/search", methods=["GET", "POST"])
 def api_search():
     question = None
@@ -213,7 +223,7 @@ def api_search():
     # Top results; we'll filter by distance and attach content
     raw = search.query(question, n=MAX_RESULTS)
     results = []
-    for sim, sentence, source in raw:
+    for sim, sentence, source, answer, stub in raw:
         distance = 1.0 - sim
         if distance >= DISTANCE_THRESHOLD:
             continue
@@ -224,6 +234,13 @@ def api_search():
             "content_adoc": None,
             "content_error": None,
         }
+        if answer:
+            entry["answer"] = answer
+        if stub:
+            entry["stub"] = stub
+        policy_url = policies_url_for_stub(stub)
+        if policy_url:
+            entry["policy_url"] = policy_url
         if _doc_root and _doc_root.is_dir() and source:
             content, err = get_doc_content(_doc_root, source)
             entry["content_adoc"] = content
@@ -232,6 +249,48 @@ def api_search():
         results.append(entry)
 
     return {"results": results}
+
+
+@app.route("/api/suggest", methods=["GET", "POST"])
+def api_suggest():
+    """
+    Return the closest FAQ questions to the partial query (embedding similarity),
+    for live suggestions while typing. No doc content; looser than /api/search
+    filtering — always returns up to SUGGEST_MAX_ITEMS nearest neighbors.
+    """
+    q = None
+    if request.method == "POST":
+        data = request.get_json(silent=True) or {}
+        q = data.get("question") or data.get("q")
+    if q is None:
+        q = request.args.get("q", "").strip()
+    if not q or len(q.strip()) < SUGGEST_MIN_LEN:
+        return {"suggestions": []}
+
+    try:
+        search = _get_search()
+    except RuntimeError:
+        return {"error": "Search not initialized"}, 503
+
+    raw = search.query(q.strip(), n=SUGGEST_MAX_ITEMS)
+    suggestions = []
+    for sim, sentence, source, answer, stub in raw:
+        distance = 1.0 - sim
+        item = {
+            "sentence": sentence,
+            "distance": round(distance, 4),
+            "source": source or "",
+        }
+        if answer:
+            item["answer"] = answer
+        if stub:
+            item["stub"] = stub
+        policy_url = policies_url_for_stub(stub)
+        if policy_url:
+            item["policy_url"] = policy_url
+        suggestions.append(item)
+
+    return {"suggestions": suggestions}
 
 
 def main() -> int:

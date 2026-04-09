@@ -112,6 +112,42 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+    .search-field-wrap { position: relative; }
+    .suggest-panel {
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      max-height: 14rem;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    .suggest-panel[hidden] { display: none !important; }
+    .suggest-hint {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 0.4rem 0.95rem 0.15rem;
+    }
+    .suggest-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.95rem;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: var(--text);
+      cursor: pointer;
+      line-height: 1.35;
+    }
+    .suggest-item:last-child { border-bottom: none; }
+    .suggest-item:hover, .suggest-item:focus { background: #f8f8f8; outline: none; }
     .results {
       display: flex;
       flex-direction: column;
@@ -123,6 +159,28 @@
       overflow: hidden;
       background: #fff;
     }
+    .result--policy {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .result--policy:hover { background: #f8f8f8; }
+    .result--policy:focus { outline: none; }
+    .result--policy:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .result-inner {
+      padding: 0.875rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: inherit;
+    }
+    .result--policy .result-distance { align-self: center; }
     .result summary {
       padding: 0.875rem 1rem;
       cursor: pointer;
@@ -149,10 +207,24 @@
       color: var(--text);
       margin: 0;
     }
+    .result--policy .result-sentence { color: var(--accent); font-weight: 600; }
     .result-meta {
       font-size: 0.8125rem;
       color: var(--muted);
       margin-top: 0.25rem;
+    }
+    .result-answer {
+      font-size: 0.875rem;
+      color: var(--text);
+      margin: 0.35rem 0 0;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--border);
+    }
+    .result-answer-label {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.35rem;
     }
     .result-distance {
       font-size: 0.75rem;
@@ -207,9 +279,12 @@
   <main class="main">
     <div class="search-wrap">
       <form class="search-form" id="searchForm" action="#" method="get">
-        <div class="search-row">
-          <input type="text" name="q" class="search-input" id="query" placeholder="Search documentation…" autocomplete="off" autofocus>
-          <button type="submit" class="search-btn" id="submitBtn">Search</button>
+        <div class="search-field-wrap">
+          <div class="search-row">
+            <input type="text" name="q" class="search-input" id="query" placeholder="Search documentation…" autocomplete="off" autofocus aria-autocomplete="list" aria-controls="suggestPanel" aria-expanded="false">
+            <button type="submit" class="search-btn" id="submitBtn">Search</button>
+          </div>
+          <div id="suggestPanel" class="suggest-panel" role="listbox" aria-label="Closest matching questions" hidden></div>
         </div>
       </form>
     </div>
@@ -221,6 +296,117 @@
       const queryEl = document.getElementById('query');
       const submitBtn = document.getElementById('submitBtn');
       const container = document.getElementById('resultsContainer');
+      const suggestPanel = document.getElementById('suggestPanel');
+      let suggestTimer = null;
+      let suggestAbort = null;
+      let searchAbort = null;
+      const SUGGEST_DEBOUNCE_MS = 240;
+      const SUGGEST_MIN_CHARS = 2;
+
+      function hideSuggestions() {
+        suggestPanel.hidden = true;
+        suggestPanel.innerHTML = '';
+        queryEl.setAttribute('aria-expanded', 'false');
+      }
+
+      function showSuggestions(items) {
+        if (!items || items.length === 0) {
+          hideSuggestions();
+          return;
+        }
+        suggestPanel.innerHTML = '';
+        const hint = document.createElement('div');
+        hint.className = 'suggest-hint';
+        hint.textContent = 'Closest matches';
+        suggestPanel.appendChild(hint);
+        items.forEach(function (it) {
+          const t = (it.sentence || '').trim();
+          if (!t) return;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'suggest-item';
+          btn.setAttribute('role', 'option');
+          btn.textContent = t;
+          btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+          btn.addEventListener('click', function () {
+            queryEl.value = t;
+            hideSuggestions();
+            runSearch(t);
+          });
+          suggestPanel.appendChild(btn);
+        });
+        suggestPanel.hidden = false;
+        queryEl.setAttribute('aria-expanded', 'true');
+      }
+
+      function fetchSuggestions(text) {
+        if (suggestAbort) suggestAbort.abort();
+        const t = (text || '').trim();
+        if (t.length < SUGGEST_MIN_CHARS) {
+          hideSuggestions();
+          return;
+        }
+        suggestAbort = new AbortController();
+        fetch('/api/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: t }),
+          signal: suggestAbort.signal
+        })
+          .then(function (res) {
+            if (!res.ok) return { suggestions: [] };
+            return res.json();
+          })
+          .then(function (data) {
+            showSuggestions(data.suggestions || []);
+          })
+          .catch(function (err) {
+            if (err.name === 'AbortError') return;
+            hideSuggestions();
+          });
+      }
+
+      function scheduleSuggestions() {
+        clearTimeout(suggestTimer);
+        suggestTimer = setTimeout(function () {
+          fetchSuggestions(queryEl.value);
+        }, SUGGEST_DEBOUNCE_MS);
+      }
+
+      function clearResultsOnTyping() {
+        container.innerHTML = '';
+        if (searchAbort) {
+          searchAbort.abort();
+          searchAbort = null;
+        }
+      }
+
+      container.addEventListener('click', function (e) {
+        var card = e.target.closest('.result--policy[data-policy-url]');
+        if (!card) return;
+        if (e.target.closest('a[href]')) return;
+        e.preventDefault();
+        window.open(card.getAttribute('data-policy-url'), '_blank', 'noopener,noreferrer');
+      });
+
+      container.addEventListener('keydown', function (e) {
+        var card = e.target.closest('.result--policy[data-policy-url]');
+        if (!card || e.target !== card) return;
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        window.open(card.getAttribute('data-policy-url'), '_blank', 'noopener,noreferrer');
+      });
+
+      queryEl.addEventListener('input', function () {
+        clearResultsOnTyping();
+        scheduleSuggestions();
+      });
+      queryEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') hideSuggestions();
+      });
+      queryEl.addEventListener('blur', function () {
+        setTimeout(hideSuggestions, 200);
+      });
       // Resolve Asciidoctor converter: @asciidoctor/core exposes Asciidoctor(), legacy bundle may expose asciidoctor instance
       const getConverter = (function () {
         if (typeof Asciidoctor === 'function') {
@@ -271,13 +457,33 @@
             bodyHtml = '<div class="content-doc">' + renderAdoc(r.content_adoc) + '</div>';
           }
         }
+        const headBlock =
+          '<p class="result-sentence">' + escapeHtml(r.sentence) + '</p>' +
+          (r.answer ? '<p class="result-answer"><span class="result-answer-label">A</span>' + escapeHtml(r.answer) + '</p>' : '') +
+          (sourceLabel ? '<p class="result-meta">' + escapeHtml(sourceLabel) + '</p>' : '');
+        if (r.policy_url) {
+          return (
+            '<div class="result result--policy" role="link" tabindex="0" data-policy-url="' +
+            escapeHtml(r.policy_url) +
+            '" aria-label="' +
+            escapeHtml('Open policy: ' + r.sentence) +
+            '">' +
+            '<div class="result-inner">' +
+            '<span class="result-head">' +
+            headBlock +
+            '</span>' +
+            '<span class="result-distance">distance ' + r.distance + '</span>' +
+            '</div>' +
+            (bodyHtml ? '<div class="result-body">' + bodyHtml + '</div>' : '') +
+            '</div>'
+          );
+        }
         return (
           '<div class="result">' +
             '<details' + openAttr + '>' +
               '<summary>' +
                 '<span class="result-head">' +
-                  '<p class="result-sentence">' + escapeHtml(r.sentence) + '</p>' +
-                  (sourceLabel ? '<p class="result-meta">' + escapeHtml(sourceLabel) + '</p>' : '') +
+                  headBlock +
                 '</span>' +
                 '<span class="result-distance">distance ' + r.distance + '</span>' +
               '</summary>' +
@@ -307,6 +513,12 @@
 
       function runSearch(q) {
         if (!q) return;
+        hideSuggestions();
+        if (searchAbort) {
+          searchAbort.abort();
+        }
+        searchAbort = new AbortController();
+        const signal = searchAbort.signal;
         var url = new URL(window.location.href);
         url.searchParams.set('q', q);
         window.history.replaceState({ q: q }, '', url.toString());
@@ -315,7 +527,8 @@
         fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: q })
+          body: JSON.stringify({ question: q }),
+          signal: signal
         })
           .then(function (res) {
             if (!res.ok) throw new Error(res.status === 400 ? 'Missing question' : 'Search failed');
@@ -323,6 +536,7 @@
           })
           .then(showResults)
           .catch(function (err) {
+            if (err.name === 'AbortError') return;
             showError(err.message || 'Request failed');
           })
           .finally(function () {
@@ -334,6 +548,7 @@
         e.preventDefault();
         var q = (queryEl.value || '').trim();
         if (!q) return;
+        hideSuggestions();
         runSearch(q);
       });
 

@@ -2,7 +2,8 @@
 """
 Find the three closest FAQ questions to input text using cosine similarity.
 
-Loads question embeddings from question-embeddings.json (JSONL with "sentence", "embedding", and optional "source" as path#section-slug).
+Loads question embeddings from a JSONL file with "sentence", "embedding", optional "source"
+(path#section-slug), and optional short "answer" when present (e.g. from embed-lines-onnx).
 loads the same embedding model (Gemma 300M via ONNX) to embed the input text,
 then for each input line prints the three closest questions and their distance
 (1 - cosine_similarity; 0 = identical, 2 = opposite).
@@ -65,7 +66,9 @@ class QuestionSearch:
         if not embeddings_path.is_file():
             raise FileNotFoundError(f"Embeddings file not found: {embeddings_path}")
 
-        self._questions: list[tuple[str, list[float], str]] = []
+        self._questions: list[
+            tuple[str, list[float], str, str | None, str | None]
+        ] = []
         with open(embeddings_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
@@ -75,8 +78,16 @@ class QuestionSearch:
                 sentence = obj.get("sentence", "")
                 emb = obj.get("embedding", [])
                 source = obj.get("source", "")
+                raw_ans = obj.get("answer")
+                raw_stub = obj.get("stub")
+                answer: str | None = None
+                if isinstance(raw_ans, str) and raw_ans.strip():
+                    answer = raw_ans.strip()
+                stub: str | None = None
+                if isinstance(raw_stub, str) and raw_stub.strip():
+                    stub = raw_stub.strip()
                 if sentence and emb:
-                    self._questions.append((sentence, emb, source))
+                    self._questions.append((sentence, emb, source, answer, stub))
 
         if not self._questions:
             raise ValueError("No questions found in embeddings file.")
@@ -117,32 +128,37 @@ class QuestionSearch:
         vec = emb.astype(np.float32).tolist()
         return _normalize_l2(vec)
 
-    def query(self, text: str, n: int = 3) -> list[tuple[float, str, str]]:
+    def query(
+        self, text: str, n: int = 3
+    ) -> list[tuple[float, str, str, str | None, str | None]]:
         """
         Return the top n closest questions to the given text.
 
-        Returns a list of (similarity, sentence, source) tuples, ordered by
-        similarity descending. Distance for display is 1.0 - similarity.
+        Returns a list of (similarity, sentence, source, answer, stub) tuples, ordered by
+        similarity descending. ``stub`` is the section heading from embeddings JSON when
+        present. Distance for display is 1.0 - similarity.
         """
         q_emb = self._embed_text(text)
         scored = [
-            (_cosine_similarity(q_emb, emb), sentence, source)
-            for sentence, emb, source in self._questions
+            (_cosine_similarity(q_emb, emb), sentence, source, answer, stub)
+            for sentence, emb, source, answer, stub in self._questions
         ]
         scored.sort(key=lambda x: -x[0])
         return scored[:n]
 
 
-def _print_results(query: str, results: list[tuple[float, str, str]]) -> None:
-    """Print query and top results in the same format as before."""
+def _print_results(
+    query: str, results: list[tuple[float, str, str, str | None, str | None]]
+) -> None:
+    """Print query and top results (including short answer when available)."""
     print(f"Query: {query}")
-    for i, (sim, sentence, source) in enumerate(results, 1):
+    for i, (sim, sentence, source, answer, stub) in enumerate(results, 1):
         distance = 1.0 - sim
+        print(f"  {i}. [{distance:.4f}] {sentence}")
         if source:
-            print(f"  {i}. [{distance:.4f}] {sentence}")
             print(f"      {source}")
-        else:
-            print(f"  {i}. [{distance:.4f}] {sentence}")
+        if answer:
+            print(f"      A: {answer}")
     print()
 
 
