@@ -1,67 +1,79 @@
 # Build Millions of Homes
 
 Q: How will he Build Millions of Homes?
-A: Federal funding and technical assistance for cities that quickly approve new housing.
+A: Federal funding and technical assistance to cities quickly approving new housing projects.
 
-Q: I've heard rents in San Francisco are really high — like, how much higher than average?
-A: San Francisco rents are 70% higher than the national average right now.
+Q: Why is housing so expensive in San Francisco right now?
+A: The median home costs $1.4 million and rents are 70% above national average.
 
-Q: What's this about public housing — isn't there a law stopping new public housing from being built?
-A: Yes, the Faircloth Amendment blocks new public housing; he'd fight to repeal it.
+Q: What's this public financing thing for housing about? I don't really understand it.
+A: A public entity would directly finance affordable housing the private market won't build alone.
 
-Q: Why can't the private market just build more affordable housing on its own?
-A: A public financing entity would fund affordable housing the private market won't build alone.
+Q: I've heard about the Faircloth Amendment — what's the deal with that?
+A: It currently blocks the government from building new public housing units.
+
+Q: So other countries have good public housing? Like where?
+A: Austria, Singapore, and Finland build high-quality social housing as examples cited.
 
 ---
 
 # Save Muni and BART
 
 Q: How will he Save Muni and BART?
-A: He'll repurpose highway funding to subsidize transit operations and build affordable housing on Muni land.
+A: He'll fight to repurpose highway funding to subsidize transit agencies' day-to-day operations.
 
-Q: I keep hearing Muni and BART are gonna have huge cuts — what's actually causing it?
-A: Both agencies face massive budget deficits from decades of underfunding and neglect.
+Q: Why are Muni and BART in such bad shape financially?
+A: Both face massive budget deficits with devastating service cuts looming soon.
 
-Q: What's this idea about building housing on Muni land — how does that help transit?
-A: Muni-owned land housing would generate more revenue and help address the housing crisis.
+Q: Wait, so the government used to fund transit operations but stopped? When did that change?
+A: Federal funding for transit operations hasn't happened since the 1990s.
+
+Q: What's this idea about building housing on Muni land?
+A: Federal incentives would support hundreds of affordable units on Muni-owned land generating more revenue.
 
 ---
 
 # Kick Out PG&E
 
 Q: How will he Kick Out PG&E?
-A: He'll enforce the 1913 Raker Act to end PG&E's control and create a public utility.
+A: He'll enforce the 1913 Raker Act to end PG&E's control and price gouging.
 
-Q: Why have my PG&E bills been going up so much? Like where does that money even go?
-A: Rate hike money goes straight to wealthy shareholders, not infrastructure or service improvements.
+Q: How much have my PG&E bills actually gone up? It feels like a lot.
+A: Average PG&E bills have risen 56% over the last three years.
 
-Q: Wait, so San Francisco already has the legal power to kick out PG&E? Why hasn't it happened?
-A: PG&E has lobbied politicians and regulators for over a century to prevent Raker Act enforcement.
+Q: So there's already a law that could make PG&E a public utility? Why hasn't anyone used it?
+A: PG&E successfully lobbied politicians and regulators for over a century not to enforce it.
+
+Q: Where does the money from PG&E's rate hikes actually go?
+A: Rate hike money goes straight to wealthy shareholders, not infrastructure improvements or services.
 
 ---
 
 # Universal Pre-K and Daycare
 
 Q: How will he provide Universal Pre-K and Daycare?
-A: He'll fight for legislation providing universal childcare and invest in recruiting and paying childcare workers.
+A: He'll fight for legislation providing universal childcare to every American family.
 
 Q: How much does daycare actually cost in San Francisco right now?
 A: Average daycare and pre-K costs over $2,000 per month per child in San Francisco.
 
-Q: I'm on the waitlist for childcare — is that normal? How long can these waitlists actually get?
-A: Waitlists for childcare spots in San Francisco can be as long as two years.
+Q: I'm on the waitlist for childcare — is that normal here?
+A: Yes, the waitlist for childcare in San Francisco can be as long as two years.
+
+Q: Why is childcare so expensive to begin with?
+A: Government has underinvested in childcare for decades, driving costs up significantly.
 
 ---
 
 # Monthly Child Stipend
 
 Q: How will he provide a Monthly Child Stipend?
-A: He supports legislation depositing $300 per child monthly into a parent's bank account.
+A: Legislation would deposit $300 per child monthly into a parent's bank account.
 
-Q: How would a child stipend actually help families — is there any proof it works?
-A: Studies show a child stipend could cut childhood poverty by up to 40%.
+Q: Would this monthly child money help with poverty at all or is it just a little extra?
+A: Studies show it could cut childhood poverty by up to 40 percent.
 
-Q: Is the cost of living really that much worse in San Francisco than elsewhere?
+Q: How much more expensive is living in San Francisco compared to the rest of the country?
 A: San Francisco's cost of living is nearly 20% higher than the national average.
 
 ---
@@ -69,335 +81,341 @@ A: San Francisco's cost of living is nearly 20% higher than the national average
 # Medicare for All
 
 Q: How will he provide Medicare for All?
-A: Medicare for All would provide high-quality healthcare without monthly premiums or deductibles for all Americans.
+A: A Medicare for All system guaranteeing high-quality care without monthly premiums or deductibles.
 
-Q: I've heard Medicare for All would cost a ton — isn't it way more expensive than what we have now?
-A: Multiple studies show America would spend far less annually with Medicare for All than the current system.
+Q: I keep hearing Medicare for All would cost more — is that true?
+A: Multiple studies show America would spend far less on healthcare with Medicare for All.
 
-Q: Does Medicare for All cover things like dental and mental health, or just basic medical stuff?
-A: The plan covers hearing, dental, vision, in-home care, mental health, and substance abuse treatment.
+Q: Would Medicare for All cover things like dental and vision, or just regular doctor stuff?
+A: The plan would cover hearing, dental, vision, in-home care, mental health, and substance abuse treatment.
 
-Q: What's this about a public company making generic drugs? How would that work?
-A: A new public corporation would manufacture common generic drugs and sell them at cost to Americans.
+Q: What's this idea about a public company making generic drugs?
+A: A new public corporation would manufacture common generic drugs and sell them at cost.
+
+Q: How many Americans are currently uninsured?
+A: Twenty-seven million uninsured adults and four million uninsured children currently lack coverage.
 
 ---
 
 # Paid Parental Leave
 
 Q: How will he provide Paid Parental Leave?
-A: He supports legislation guaranteeing 24 weeks of paid parental leave for every American family.
+A: Legislation guaranteeing 24 weeks of paid parental leave for every American family.
 
-Q: Are we really the only country that doesn't guarantee paid parental leave? That seems crazy.
-A: Yes, the United States is the only developed country without guaranteed paid parental leave.
+Q: Is the US really the only country without paid parental leave? That seems wild.
+A: Yes, the US is the only developed country not guaranteeing paid parental leave.
 
-Q: Does paid leave actually help beyond just giving parents time off — like does it do anything else?
-A: Studies show it improves parent and baby health, reduces the gender wage gap, and boosts productivity.
+Q: Does paid leave actually help anyone or is it just a nice-to-have thing?
+A: Studies show it improves health of parents and babies and reduces the gender wage gap.
 
 ---
 
 # Tuition-Free Public Universities and Trade Schools
 
-Q: How will he provide Tuition-Free Public Universities and Trade Schools?
-A: He'll support the College for All Act making public colleges, community colleges, and trade schools free.
+Q: How will he support Tuition-Free Public Universities and Trade Schools?
+A: He'll support the College for All Act making public colleges and trade schools tuition-free.
 
-Q: How much would college actually cost my kid if they go to a four-year school in 18 years?
-A: A child born today could expect to pay $150,000 to $200,000 for a four-year public college.
+Q: How much is college expected to cost by the time my kid grows up?
+A: A child born today could pay $150,000 to $200,000 for a four-year public college.
 
-Q: Didn't California used to have free tuition? What happened to that?
+Q: Did California ever have free college? I thought that was just something people dreamed about.
 A: California offered free tuition at public universities until the late 1970s.
 
-Q: What about living expenses and books — does free tuition cover any of that stuff too?
-A: He'll fight to expand Pell grants and work-study programs to help cover housing, books, and living expenses.
+Q: What about things like housing and books for students — does this plan cover any of that?
+A: He'll fight to expand Pell grants and work-study programs for housing, books, and living expenses.
 
 ---
 
 # Stop Corporations from Ripping You Off
 
 Q: How will he Stop Corporations from Ripping You Off?
-A: He'll fight hidden fees, junk fees, restore consumer rights, and fund watchdog agencies like the CFPB.
+A: He'll fight hidden fees, predatory financial practices, and fund consumer watchdog agencies properly.
 
-Q: What's the FAIR Act — I keep seeing it mentioned but I don't know what it does?
-A: The FAIR Act restores your right to sue companies that break the law instead of forced arbitration.
+Q: What is the FAIR Act? I've never heard of it.
+A: It would restore your right to sue companies that break the law, ending forced arbitration.
 
-Q: I've had issues with bank overdraft fees — is there anything in this plan about that?
-A: He'll fight predatory practices including bank overdraft fees, late fees, and high credit card interest rates.
+Q: What's a non-compete clause and why is it bad for workers?
+A: Non-compete clauses trap workers in their jobs; the Workforce Mobility Act would ban them.
 
-Q: What does "right to repair" mean — can someone explain that to me?
-A: Right to repair means consumers can fix their own products; he'll fight to guarantee that right.
+Q: I didn't even know right to repair was a thing. What does that mean exactly?
+A: It guarantees consumers can repair their own products rather than being forced to use manufacturers.
 
 ---
 
 # Build the High Speed Rail
 
 Q: How will he Build the High Speed Rail?
-A: He'll restore the $4 billion in federal grants and fight for full funding to complete the SF-to-LA line.
+A: He'll introduce legislation restoring $4 billion in federal grants and repeal the defunding provision.
 
-Q: What happened to the California high-speed rail funding — I heard Trump pulled it?
-A: Trump pulled $4 billion in federal funding, and Republicans made the project ineligible for future federal support.
+Q: Wait, Trump pulled funding from California's bullet train? How much are we talking?
+A: Trump pulled $4 billion in federal funding and Republicans blocked future federal support entirely.
 
-Q: How much of the high-speed rail is already built? Like is it just a plan or is there actual construction?
+Q: How far along is the high speed rail project actually? Is anything even built?
 A: Seventy miles of guideway and dozens of major structures are already complete.
 
-Q: How much is California actually putting into this project on its own?
-A: California has committed $1 billion a year through 2045 to the high-speed rail project.
+Q: How much is California already putting into this rail project on its own?
+A: California has committed $1 billion a year through 2045 for the high speed rail project.
 
 ---
 
 # Preventing Housing Displacement
 
 Q: How will he address Preventing Housing Displacement?
-A: He'll fight for rental assistance, community land trusts, housing vouchers, and support for tenants unions.
+A: He'll fight for rental assistance, community land trusts, housing vouchers, and tenant union support.
 
-Q: I'm a renter and homeowners get a tax break on their mortgage — do renters get anything?
-A: He supports making rent payments tax-deductible, just like mortgage payments currently are for homeowners.
+Q: I'm renting — can I get a tax deduction like homeowners do for their mortgages?
+A: He supports making rent payments tax-deductible, leveling the playing field for renters.
 
-Q: What's a community land trust — I've never heard of that before?
-A: Community land trusts are entities that protect existing affordable housing; he'd introduce federal support for them.
+Q: What are community land trusts? I keep hearing that term but I don't really get it.
+A: They're organizations that protect existing affordable housing; he wants federal support for them.
 
 ---
 
 # Stop Trump's Authoritarian Coup
 
 Q: How will he Stop Trump's Authoritarian Coup?
-A: He'll build strong constituent services, organize institutions against Trump, and protect the 2028 elections.
+A: He'll build top constituent services, organize institutions collectively, and ensure fair 2028 elections.
 
-Q: What can a Congress member actually do if ICE picks up someone in my neighborhood?
-A: A congressional constituent services office can call and potentially stop a deportation in progress.
+Q: I didn't know a congressman could actually help if ICE picks up my family member. Is that real?
+A: Yes, congressional offices can make calls that unblock citizenship applications or stop deportations.
 
-Q: I'm worried about Republicans messing with elections — what specifically would he do about that?
-A: He'd work to reverse Republican takeovers of county election boards and call out election deniers publicly.
+Q: What does it mean that Republicans are taking over county election boards?
+A: They're filling boards that count and certify elections with election deniers to dispute results.
 
 ---
 
 # Create Real Public Safety
 
 Q: How will he Create Real Public Safety?
-A: He'll fund alternative responders, rebuild police with community trust, and require body cameras for federal-funded agencies.
+A: He'll fund alternative responders, rebuild police force, abolish qualified immunity, and require body cameras.
 
-Q: I've heard San Francisco is short on police officers — how bad is it actually?
+Q: San Francisco is short on police officers — like how many are we actually missing?
 A: San Francisco is short more than 500 police officers, straining the system and driving up costs.
 
-Q: What does "demilitarize local departments" mean — like what would actually change?
-A: It means reducing military-style equipment and tactics used by local police departments.
+Q: What's qualified immunity and why do people keep talking about getting rid of it?
+A: Not specified in this section.
 
 ---
 
 # Fully Fund Public Schools
 
 Q: How will he Fully Fund Public Schools?
-A: He'll double Title I funding, fully fund IDEA, and establish a national minimum teacher salary of $60,000.
+A: He'll double Title I funding, fully fund IDEA, and establish a national minimum teacher salary.
 
-Q: I heard San Francisco schools are facing a huge budget shortfall — how much are we talking?
+Q: How bad are reading and math scores right now compared to before?
+A: Reading and math scores are at their lowest level in over 20 years.
+
+Q: Our school district has a big budget problem — how much of a shortfall are we talking?
 A: San Francisco's public school system faces a $110 million budget shortfall and may close schools.
 
-Q: What's happening with reading and math scores in California — are they really that bad?
-A: Reading and math scores are at their lowest in over 20 years; under half of third graders read at grade level.
-
-Q: Teachers are being priced out of San Francisco — what would actually help them afford to stay?
-A: He'd support canceling school staff student debt after five years and providing rental and mortgage assistance.
+Q: I heard teachers are leaving because they can't afford to live here — what's the plan to fix that?
+A: The plan includes rental assistance, mortgage help, and student debt cancellation after five years of service.
 
 ---
 
 # Enshrine Reproductive Rights
 
 Q: How will he Enshrine Reproductive Rights?
-A: He'll pass the Women's Health Protection Act, repeal the Hyde Amendment, and repeal the Comstock Act.
+A: He'll pass the Women's Health Protection Act and repeal the Hyde and Comstock Acts.
 
-Q: What's the Hyde Amendment and why does repealing it matter?
-A: The Hyde Amendment blocks publicly funded insurance like Medicaid from paying for abortions.
-
-Q: What's the Comstock Act and why are people worried about it?
+Q: What's the Comstock Act? I've never even heard of that one before.
 A: It's an 1870s law Republicans want to use to institute a national abortion ban.
 
-Q: Democrats had almost 50 years to protect abortion rights federally — why didn't they?
-A: Democratic leadership relied solely on the Supreme Court rather than codifying rights into law.
+Q: Could Medicaid or Medicare ever pay for abortions? What's blocking that now?
+A: The Hyde Amendment currently blocks publicly funded insurance from paying for abortions.
+
+Q: Democrats had 50 years to protect abortion rights after Roe — why didn't they?
+A: They relied solely on the Supreme Court rather than codifying protections into actual law.
 
 ---
 
 # End the Wars
 
 Q: How will he End the Wars?
-A: He'd repeal outdated AUMFs, back the National Security Powers Act, and end military aid to Israel.
+A: He'd vote to end all military aid to Israel and repeal outdated military force authorizations.
 
-Q: What's this Marshall Plan idea he's talking about for foreign policy?
-A: He wants a modern Marshall Plan helping developing nations build clean, sustainable, and prosperous economies.
+Q: I keep hearing about forever wars — what laws are letting presidents start wars without Congress?
+A: Outdated Authorizations for Use of Military Force (AUMFs) create legal loopholes enabling unilateral action.
 
-Q: Should Congress or the president be deciding when America goes to war?
-A: He believes Congress, not the president, should decide when America goes to war.
+Q: What's this Marshall Plan comparison he's making? What does that mean for today?
+A: He wants a modern version helping developing nations build clean, sustainable, prosperous economies.
 
 ---
 
 # Protect the LGBTQ+ Community
 
 Q: How will he Protect the LGBTQ+ Community?
-A: He'll fight to pass the Equality Act, protect trans students, and include LGBTQ+ needs in all legislation.
+A: He'll fight to pass the Equality Act banning discrimination in employment, housing, and education.
 
-Q: What exactly does the Equality Act do — like what would it actually protect?
-A: It would ban discrimination based on sexual orientation or gender identity in employment, housing, education, and public accommodations.
+Q: What is the Equality Act exactly and what would it actually change?
+A: It would ban discrimination based on sexual orientation or gender identity across employment, housing, education, and public accommodations.
 
-Q: Would Medicare for All cover gender affirming care under his plan?
-A: Yes, his Medicare for All plan includes full coverage for gender affirming care, contraception, and PrEP.
+Q: Would transgender people be able to change their gender on government documents if this passes?
+A: Yes, he supports codifying the right to change gender identity on government documents including non-binary markers.
 
 ---
 
 # Disability Rights
 
 Q: How will he address Disability Rights?
-A: He'll eliminate SSI marriage penalties, create gradual benefits phase-outs, and subsidize workplace accommodations.
+A: He'll eliminate SSI marriage penalties and create a gradual benefits phase-out to prevent poverty traps.
 
-Q: Wait, disabled people actually get penalized for getting married? How does that work?
-A: Federal SSI benefits penalize disabled people for getting married, forcing a choice between relationships and benefits.
+Q: I'm disabled and scared to get a job because I might lose my healthcare. Is that a real thing?
+A: Yes, earning income can currently trigger immediate loss of healthcare and financial assistance for disabled people.
 
-Q: Why do some people with disabilities avoid working even if they could?
-A: Earning income can trigger immediate loss of healthcare and financial assistance, leaving them worse off than before working.
+Q: Why don't more employers hire people with disabilities? What's stopping them?
+A: Many workplaces perceive accommodations as too costly, so a federal subsidy program is proposed.
 
 ---
 
 # Stop Funding Genocide
 
 Q: How will he Stop Funding Genocide?
-A: He supports an arms embargo on Israel, the Block the Bombs Act, and stopping arms sales enabling Sudan's genocide.
+A: He supports an arms embargo and the Block the Bombs Act to end military aid to Israel.
 
-Q: How many civilians have been killed in Gaza so far?
-A: More than 60,000 civilians and 250 journalists have been killed in Gaza.
+Q: What's happening in Sudan and how is the US connected to it?
+A: The US provides military funding to UAE, which supplies weapons and funding enabling genocide in Sudan.
 
-Q: I didn't know the US was connected to what's happening in Sudan — what's the link?
-A: The UAE, a U.S. military funding recipient, is supplying weapons and funds enabling genocide in Sudan.
+Q: How many people have been killed in Gaza according to what's cited here?
+A: Over 60,000 civilians and 250 journalists have been killed in Gaza.
 
-Q: What does he say about Hamas and what happened on October 7?
-A: He acknowledges Hamas committed war crimes by killing Israeli civilians on October 7.
+Q: I didn't realize there was a genocide in Sudan too — how bad is it?
+A: Over 12 million people are displaced and upwards of 400,000 have been killed in Sudan.
 
 ---
 
 # US-China relations
 
-Q: How will he address US-China relations?
-A: He'll deescalate the Cold War with China and push for cooperation on climate, nuclear proliferation, and AI.
+Q: How will he handle US-China relations?
+A: He'll fight to deescalate the Cold War and push for cooperation on climate, nuclear, and AI issues.
 
-Q: Does he support sending weapons to Taiwan or US troops there?
-A: He supports defensive weapons for Taiwan but opposes offensive weapons or deploying US troops there.
+Q: Would he send troops to Taiwan if China attacked?
+A: He would oppose deploying US troops to Taiwan while supporting sending defensive weapons only.
 
-Q: What's the One China Policy and does he support it?
-A: The One China Policy maintains peace between the US and China, and he supports continuing it.
+Q: What is the One China Policy and does he support it?
+A: Yes, he supports the current US One China Policy which has helped maintain peace and collaboration.
 
 ---
 
 # Build the Clean Economy to Create Prosperity for All
 
 Q: How will he Build the Clean Economy to Create Prosperity for All?
-A: He'll pursue the Mission for America plan to rapidly slash emissions and build high-tech clean industries.
+A: Through the Mission for America plan covering 20-plus national plans to build clean industries and infrastructure.
 
-Q: What's the Green New Deal and what did it actually lead to?
-A: The Green New Deal directly led to the Inflation Reduction Act, the largest climate investment in US history.
+Q: What's the Mission for America? Is that different from the Green New Deal?
+A: It's a successor to the Green New Deal with detailed plans to slash emissions and create prosperity.
 
-Q: What's the Mission for America plan he keeps talking about?
-A: It's a detailed plan with 20-plus national strategies to build clean industries and cut emissions rapidly.
+Q: Didn't he help write the Green New Deal? What exactly did he do?
+A: As AOC's chief of staff he helped author the Green New Deal, leading to the Inflation Reduction Act.
 
 ---
 
 # Welcome Immigrants
 
 Q: How will he Welcome Immigrants?
-A: He'll repeal the Alien Enemies Act, end courthouse detentions, vote to abolish ICE, and protect sanctuary cities.
+A: He'll repeal the Alien Enemies Act, end courthouse detentions, and vote to abolish ICE.
 
-Q: I've heard about ICE detaining people without due process — what would he actually do about it?
-A: He'd vote to abolish ICE and end courthouse detentions to stop detentions without due process.
+Q: What's the Alien Enemies Act and why does it need repealing?
+A: Not specified in this section.
 
-Q: What's his personal connection to immigration — does he have one?
-A: His parents came to America through a US immigration office in India that encouraged them to apply for visas.
+Q: What's his personal connection to immigration — why does he care so much about this?
+A: His parents came through a U.S. immigration office in India where they were encouraged to apply for visas.
 
 ---
 
 # Making the Wealthy and Corporations Pay Their Fair Share
 
 Q: How will he address Making the Wealthy and Corporations Pay Their Fair Share?
-A: He'll push a wealth tax, raise corporate taxes, close carried interest loopholes, and eliminate Social Security income caps.
+A: He'll fight for a wealth tax, close loopholes, raise corporate taxes, and eliminate the Social Security cap.
 
-Q: What's the Ultra-Millionaire Tax and how much would it actually raise?
-A: It taxes wealth over $50 million at 2 cents per dollar; estimates suggest nearly $3 trillion over ten years.
+Q: What was the top tax rate back in the 1950s? I feel like it was way higher than now.
+A: The top marginal income tax rate was over 90% and corporate tax rate over 50% in the 1950s and 60s.
 
-Q: What were corporate tax rates like back in the 1950s compared to now?
-A: In the 1950s and 60s, the corporate tax rate was over 50% and top income tax rate over 90%.
+Q: What's the carried interest loophole? I've heard politicians talk about it but never understood it.
+A: Wealthy fund managers pay lower capital gains tax rates on income instead of ordinary income tax rates.
 
-Q: What's the carried interest loophole — I keep hearing about it but I don't get it?
-A: Hedge fund managers' compensation is taxed at the lower capital gains rate instead of as ordinary income.
+Q: So billionaires borrow against their stocks to avoid paying taxes? How does that work exactly?
+A: They borrow against appreciated stock instead of selling it, avoiding capital gains taxes entirely.
+
+Q: How much money could the Ultra-Millionaire Tax actually raise?
+A: Studies estimate the wealth tax alone could raise close to $3 trillion over ten years.
 
 ---
 
 # Empower Workers
 
 Q: How will he Empower Workers?
-A: He'll raise the minimum wage, pass the PRO Act, promote sectoral bargaining, and guarantee worker bathroom breaks.
+A: He'll raise the minimum wage, pass the PRO Act, promote sectoral bargaining, and crack down on wage theft.
 
 Q: What would the minimum wage be in San Francisco under his plan?
-A: The Raise the Wage Act would set the minimum wage at $25 in San Francisco.
+A: The plan would set the federal minimum wage at $25 in San Francisco tied to local cost of living.
 
-Q: What's wage theft — I've never really heard that term before?
-A: Wage theft is when employers steal workers' wages; he'd make intentional repeated wage theft a felony.
+Q: Wait, wage theft is the most common type of theft in the US? That seems hard to believe.
+A: Yes, wage theft is described as the most common form of theft in the United States.
 
-Q: What's sectoral bargaining and how is it different from regular union bargaining?
-A: Sectoral bargaining lets workers across an entire industry negotiate wages together, not just company by company.
+Q: What's sectoral bargaining? That's not something I've heard of before.
+A: Workers across an entire industry negotiate wages and conditions together rather than company by company.
 
 ---
 
 # AI
 
 Q: How will he address AI?
-A: He'll require data centers to pay their own energy costs, regulate AI models, and protect displaced workers.
+A: He'll require data centers to pay energy costs, regulate AI models, and protect displaced workers.
 
-Q: Why are utility bills going up near data centers — isn't that the tech companies' problem?
-A: Tech companies are passing massive data center electricity costs down to nearby regular residents' utility bills.
+Q: So tech companies are making my utility bills go up because of AI data centers?
+A: Yes, utility bills in areas near data centers are already going up due to massive electricity consumption.
 
-Q: What would he do to protect kids from AI chatbots?
-A: He'd regulate AI chatbot interactions with children and prohibit chatbots from encouraging self-harm or sexual content.
+Q: What about kids and AI chatbots — is there any plan to protect children from that?
+A: The plan would regulate AI chatbot interactions with children and prohibit encouraging self-harm or sexual content.
 
-Q: Would taxpayers ever have to bail out data center companies under his plan?
-A: No, he explicitly opposes any taxpayer bailouts for data center companies facing financial trouble.
+Q: If I lose my job to AI, would there be any help for me to find a new one?
+A: Companies benefiting from AI productivity gains could be required to contribute to a worker transition fund.
 
 ---
 
 # Ban Congressional Stock Trading
 
 Q: How will he Ban Congressional Stock Trading?
-A: He'll support a ban and introduce a discharge petition on day one to force a floor vote.
+A: He'll introduce a discharge petition on day one to force a floor vote banning congressional stock trading.
 
-Q: What's a discharge petition — I've never heard that term before?
-A: A discharge petition forces a floor vote on legislation without leadership approval; it's been used successfully before.
+Q: How much time do members of Congress spend fundraising instead of doing their actual job?
+A: Not specified in this section.
 
-Q: How much time do members of Congress actually spend fundraising instead of working?
-A: Members of Congress spend 6 to 8 hours daily making fundraising calls as their main job.
+Q: Do most Americans actually want this stock trading ban or is it just a political thing?
+A: About 90% of Americans believe members of Congress shouldn't be allowed to trade stocks.
 
 ---
 
 # End Money in Politics
 
 Q: How will he End Money in Politics?
-A: He'll fight to overturn Citizens United and create a publicly financed election system nationally.
+A: He supports overturning Citizens United and creating a publicly financed election system nationally.
 
-Q: Has public election financing actually been tried anywhere, or is this just a new idea?
-A: New York City, Seattle, Arizona, and Maine already have versions of public election financing.
+Q: How much time do members of Congress spend just calling donors for money?
+A: Members of Congress spend 6 to 8 hours a day dialing for dollars as campaign donations.
 
-Q: Is he taking any money from corporations or PACs in his own campaign?
-A: He has pledged to take no corporate or lobbyist PAC money in this campaign.
+Q: Is he taking any corporate money himself for this campaign?
+A: He has pledged to take no corporate or lobbyist PAC money in his campaign.
 
 ---
 
 # Whole Document
 
-Q: I'm trying to figure out who this person is — what's their background in politics?
-A: He was Rep. Alexandria Ocasio-Cortez's chief of staff and helped author the Green New Deal.
-
-Q: What district is he running in?
+Q: What district is this guy running to represent?
 A: He's running for Congress representing San Francisco.
 
-Q: What's the overall theme of what he's trying to do — like can someone just give me the gist?
-A: He wants to make San Francisco livable, rebuild the American Dream, and save democracy.
+Q: I'm trying to figure out if he's progressive or more moderate — how would you describe his overall platform?
+A: He supports Medicare for All, Green New Deal successor, wealth taxes, and ending military aid to Israel.
 
-Q: Is he taking a position on the Israel-Gaza situation or staying quiet on it?
-A: He calls it genocide and says he'd vote to end all military aid to Israel if elected.
+Q: What's his actual experience in politics? Has he held office before?
+A: He served as Chief of Staff to Representative Alexandria Ocasio-Cortez, helping build her congressional office.
 
-Q: I want to donate to this campaign — how do I do that?
-A: Donate at the ActBlue link in the campaign navigation at the top of the page.
+Q: Does he take money from big corporations or is he actually independent?
+A: He has pledged to take no corporate or lobbyist PAC money in this campaign.
 
-Q: Does he have any personal experience with the issues he's talking about, or is this all just policy stuff?
-A: He attended Title I schools, has immigrant parents, and became a centimillionaire after co-founding Stripe.
+Q: What are the main things he wants to do to make San Francisco more affordable?
+A: He plans to build housing, save Muni and BART, kick out PG&E, and expand childcare access.
+
+Q: I'm worried about getting deported — does he have anything specific about protecting immigrants in San Francisco?
+A: He'll protect sanctuary cities, end courthouse detentions, and build the best constituent services office possible.

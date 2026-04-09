@@ -32,6 +32,7 @@ FAQ GENERATION
   From AsciiDoc (directory):  python docs-to-faqs.py --faq --adoc ./documentation/asciidoc/computers/os
   From Markdown (one or more files):  python docs-to-faqs.py --faq --markdown data/saikat-policies.md
   Optional:  --question-prefix "How will he"  → one required Q per section starting with that phrase, section title quoted verbatim, with extra words if needed for grammar (e.g. "… provide Paid Parental Leave?").
+  Default Ollama model for --faq: gemma3:27b (Google Gemma 3; ollama pull gemma3:27b). Use --model gemma3:12b for a smaller download.
   Writes a sibling <stem>.faq.txt next to each source file (Q:/A: lines; answers 10–15 words from source only). Add --anthropic for Claude instead of Ollama. Use --force to replace an existing .faq.txt.
 """
 
@@ -53,6 +54,11 @@ try:
     import anthropic
 except ImportError:
     anthropic = None
+
+# Default Ollama model for --faq: Gemma 3 27B (~17GB Q4_K_M; fits comfortably in 48GB RAM).
+# Library: https://ollama.com/library/gemma3 — smaller: gemma3:12b (~8GB), gemma3:4b (~3.3GB).
+# (There is no "gemma4" tag on Ollama; Gemma 3 is the current Google Gemma family.)
+DEFAULT_OLLAMA_FAQ_MODEL = "gemma3:27b"
 
 
 # ── Data model ─────────────────────────────────────────────────────────────────
@@ -710,28 +716,68 @@ def _faq_system_prompt(
     return base
 
 
+_OLLAMA_USER_WRAPPER = """=== TASK (obey exactly; this is not a chat) ===
+
+__INSTRUCTIONS_PLACEHOLDER__
+
+=== SOURCE MATERIAL (generate Q/A lines from this only) ===
+
+__SOURCE_PLACEHOLDER__
+"""
+
+
 def generate_faq_questions(
     adoc_content: str,
-    model: str = "qwen3.5:9b",
+    model: str = DEFAULT_OLLAMA_FAQ_MODEL,
     prompt_kind: str = "asciidoc",
     question_prefix: str | None = None,
 ) -> str:
     """
     Ask the Ollama model for Q:/A: pairs: spoken-style questions plus 10–15 word
     answers grounded only in the given source (AsciiDoc or Markdown per prompt_kind).
+
+    Note: Many Ollama models ignore or weakly weight ``role: system`` in the chat
+    template and fall back to generic "helpful assistant" summaries. We put the full
+    instructions (same as system would be) in the user message so the prompt is applied.
     """
     if ollama_chat is None:
         raise RuntimeError("ollama package is not installed. pip install ollama")
 
-    system_prompt = _faq_system_prompt(prompt_kind, question_prefix=question_prefix)
+    instructions = _faq_system_prompt(prompt_kind, question_prefix=question_prefix)
+    # Hard guardrails against summary-style outputs (common when system is ignored).
+    instructions += """
 
-    response = ollama_chat(
+STRICT OUTPUT RULES (Ollama):
+- Your entire reply must be ONLY the FAQ text: # section headings, then Q:/A: lines. Nothing else.
+- Do NOT write an introduction, overview, "structured summary", or "here is a summary".
+- Do NOT offer to help, ask follow-up questions, or list numbered options.
+- Do NOT describe the document or author before the questions; start with the first # heading or Q: line as required by the format above.
+"""
+
+    user_message = (
+        _OLLAMA_USER_WRAPPER.replace("__INSTRUCTIONS_PLACEHOLDER__", instructions)
+        .replace("__SOURCE_PLACEHOLDER__", adoc_content)
+    )
+
+    # Minimal system so models that do read it still steer; primary instructions are in user.
+    system_guard = (
+        "You are a formatting engine. Follow the TASK section in the user message exactly. "
+        "Output only the FAQ format (Q:/A: and # headings); no preamble or summary."
+    )
+
+    ollama_kwargs = dict(
         model=model,
         messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": adoc_content},
+            {"role": "system", "content": system_guard},
+            {"role": "user", "content": user_message},
         ],
     )
+    # Lower temperature helps stick to the requested format (supported by ollama Python API).
+    try:
+        response = ollama_chat(**ollama_kwargs, options={"temperature": 0.35})
+    except TypeError:
+        response = ollama_chat(**ollama_kwargs)
+
     # Support both object and dict response (ollama package version variance)
     if hasattr(response, "message"):
         return response.message.content or ""
@@ -791,7 +837,7 @@ def generate_faq_questions_anthropic(
 
 def run_faq_for_adoc(
     adoc_path: Path,
-    model: str = "qwen3.5:9b",
+    model: str = DEFAULT_OLLAMA_FAQ_MODEL,
     use_anthropic: bool = False,
     question_prefix: str | None = None,
     force: bool = False,
@@ -816,7 +862,7 @@ def run_faq_for_adoc(
 
 def run_faq_for_markdown(
     md_path: Path,
-    model: str = "qwen3.5:9b",
+    model: str = DEFAULT_OLLAMA_FAQ_MODEL,
     use_anthropic: bool = False,
     question_prefix: str | None = None,
     force: bool = False,
@@ -858,7 +904,7 @@ def run_faq_for_markdown(
 
 def run_faq_for_all_adocs(
     adoc_dir: Path,
-    model: str = "qwen3.5:9b",
+    model: str = DEFAULT_OLLAMA_FAQ_MODEL,
     use_anthropic: bool = False,
     question_prefix: str | None = None,
     force: bool = False,
@@ -921,8 +967,8 @@ def main() -> None:
     parser.add_argument(
         "--model",
         type=str,
-        default="qwen3.5:9b",
-        help="Model for --faq: Ollama model (default: qwen3.5:9b) or Anthropic model when --anthropic (default: claude-sonnet-4-6)",
+        default=DEFAULT_OLLAMA_FAQ_MODEL,
+        help=f"Model for --faq: Ollama model (default: {DEFAULT_OLLAMA_FAQ_MODEL}) or Anthropic when --anthropic (default: claude-sonnet-4-6)",
     )
     parser.add_argument(
         "--anthropic",
@@ -949,7 +995,7 @@ def main() -> None:
         if not args.adoc and not args.markdown:
             parser.error("--faq requires --adoc (directory of .adoc files) or --markdown (one or more .md files)")
         model = args.model
-        if args.anthropic and model == "qwen3.5:9b":
+        if args.anthropic and model == DEFAULT_OLLAMA_FAQ_MODEL:
             model = "claude-sonnet-4-6"
         if args.markdown:
             for raw in args.markdown:
